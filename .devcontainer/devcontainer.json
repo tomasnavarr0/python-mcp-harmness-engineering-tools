@@ -1,0 +1,45 @@
+{
+  "name": "Smart Uploads Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    }
+  },
+  "postCreateCommand": "UV_VENV_CREATE=1 UV_VENV_CLEAR=1 uv sync --dev",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "extensions": [
+    "ms-python.python",
+    "ms-toolsai.jupyter",
+    "ms-azuretools.vscode-docker",
+    "charliermarsh.ruff",
+    "streetsidesoftware.code-spell-checker",
+    "njpwerner.autodocstring",
+    "tamasfe.even-better-toml"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
+        "python.pythonPath": "/workspace/.venv/bin/python",
+        "python.analysis.extraPaths": [
+          "/workspace/.venv/lib/python3.12/site-packages"
+        ]
+      }
+    }
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [8000],
+  "remoteUser": "vscode",
+  "runArgs": [
+    "--env-file", ".env"
+  ]
+}
