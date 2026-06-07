@@ -8,3 +8,6 @@ dependencies = [
     "fastmcp==3.4.2",
     "mcp==1.27.2",
 ]
+
+[tool.pymetrica]
+exclude = [".venv", ".devcontainer", "__pycache__", ".git", ".ruff_cache"]

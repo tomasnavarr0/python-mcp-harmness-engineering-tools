@@ -29,7 +29,14 @@ class PymetricaAnalyzer:
 
         # Pymetrica usa el subcomando run-all para correr todas las métricas.
         # Le pasamos --long-report para que el agente obtenga todo el contexto.
-        command = ["pymetrica", "run-all", str(request.target_path), "--long-report"]
+        command = [
+            "uv",
+            "run",
+            "pymetrica",
+            "run-all",
+            str(request.target_path),
+            "--long-report",
+        ]
 
         code, stdout, stderr = executor.execute(command)
 

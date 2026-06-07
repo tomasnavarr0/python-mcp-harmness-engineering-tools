@@ -8,7 +8,12 @@ class SafeSubprocessExecutor:
     ) -> tuple[int, str, str]:
         try:
             result = subprocess.run(
-                command, cwd=cwd, capture_output=True, text=True, check=False
+                command,
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                check=False,
+                stdin=subprocess.DEVNULL,
             )
             return result.returncode, result.stdout, result.stderr
         except FileNotFoundError:
