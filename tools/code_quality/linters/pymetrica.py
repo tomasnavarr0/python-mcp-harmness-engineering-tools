@@ -1,17 +1,21 @@
+import sys
+from pathlib import Path
 from tools.utils import CommandExecutor
 from tools.data_models import CodeQualityRequest, CodeQualityResponse
 
-
 class PymetricaAnalyzer:
-    """Estrategia concreta para analizar métricas de arquitectura con Pymetrica."""
-
     @property
     def name(self) -> str:
         return "pymetrica"
 
+    def _get_binary(self) -> list[str]:
+        venv_bin = Path(sys.executable).parent / "pymetrica.exe"
+        if venv_bin.exists():
+            return [str(venv_bin)]
+        return [sys.executable, "-m", "pymetrica"]
+
     def is_installed(self, executor: CommandExecutor) -> bool:
-        # Verificamos si la CLI de pymetrica responde
-        code, _, _ = executor.execute(["pymetrica", "--help"])
+        code, _, _ = executor.execute(self._get_binary() + ["--help"])
         return code == 0
 
     def run(
@@ -20,27 +24,17 @@ class PymetricaAnalyzer:
         if not self.is_installed(executor):
             return CodeQualityResponse(
                 success=False,
-                output=(
-                    f"CRITICAL: '{self.name}' no está instalado. "
-                    f"Ejecuta: 'uv pip install {self.name}'."
-                ),
+                output=f"CRITICAL: '{self.name}' no está instalado en el .venv.",
                 missing_dependencies=[self.name],
             )
 
-        # Pymetrica usa el subcomando run-all para correr todas las métricas.
-        # Le pasamos --long-report para que el agente obtenga todo el contexto.
-        command = [
-            "uv",
-            "run",
-            "pymetrica",
+        command = self._get_binary() + [
             "run-all",
             str(request.target_path),
             "--long-report",
         ]
 
         code, stdout, stderr = executor.execute(command)
-
-        # Si el código de retorno es 0, todo salió bien
         is_success = code == 0
         final_output = stdout.strip() if stdout.strip() else stderr.strip()
 
