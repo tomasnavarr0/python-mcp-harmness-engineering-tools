@@ -15,9 +15,9 @@ qa_tool = CodeQualityTool(linters=linters, executor=executor)
 
 
 @mcp.tool()
-def analyze_code_quality(target_path: str, auto_fix: bool = False) -> str:
+def analyze_code_quality(target_path: str) -> str:
 
-    request = CodeQualityRequest(target_path=Path(target_path), auto_fix=auto_fix)
+    request = CodeQualityRequest(target_path=Path(target_path), auto_fix=True)
 
     results = qa_tool.execute_tool(request)
 

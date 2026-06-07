@@ -15,7 +15,7 @@ class RuffLinter:
         if not self.is_installed(executor):
             return CodeQualityResponse(
                 success=False,
-                output=f"CRITICAL: '{self.name}' no está instalado. Ejecuta: 'pip install {self.name}'.",
+                output=f"CRITICAL: '{self.name}' no está instalado. Ejecuta: 'uv pip install {self.name}'.",
                 missing_dependencies=[self.name]
             )
         
