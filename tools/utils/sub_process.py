@@ -3,7 +3,9 @@ import subprocess
 
 
 class SafeSubprocessExecutor:
-    def execute(self, command: list[str], cwd: Path | None = None) -> tuple[int, str, str]:
+    def execute(
+        self, command: list[str], cwd: Path | None = None
+    ) -> tuple[int, str, str]:
         try:
             result = subprocess.run(
                 command, cwd=cwd, capture_output=True, text=True, check=False
