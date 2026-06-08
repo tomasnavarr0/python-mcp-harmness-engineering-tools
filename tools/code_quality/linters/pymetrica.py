@@ -28,9 +28,30 @@ class PymetricaAnalyzer:
                 missing_dependencies=[self.name],
             )
 
+        target = Path(request.target_path)
+        
+        # 🛡️ ESCUDO ANTI-BINARIOS: Evitamos que intente leer el .venv de la raíz
+        if str(target) == "." or target.resolve() == Path.cwd().resolve():
+            return CodeQualityResponse(
+                success=False,
+                output=(
+                    "ERROR: Pymetrica no puede analizar la raíz '.' porque intentará leer los archivos binarios "
+                    "del entorno virtual ('.venv') o caches, lo que provoca un UnicodeDecodeError. "
+                    "Por favor, ejecuta esta herramienta especificando tu carpeta de código fuente real (por ejemplo: 'tools')."
+                ),
+                missing_dependencies=[],
+            )
+
+        if not target.exists():
+            return CodeQualityResponse(
+                success=False,
+                output=f"ERROR: El path especificado '{target}' no existe en el disco.",
+                missing_dependencies=[],
+            )
+
         command = self._get_binary() + [
             "run-all",
-            str(request.target_path),
+            str(target),
             "--long-report",
         ]
 

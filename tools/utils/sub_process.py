@@ -7,7 +7,7 @@ class SafeSubprocessExecutor:
         self, command: list[str], cwd: Path | None = None
     ) -> tuple[int, str, str]:
         try:
-            result = subprocess.run(
+            result = subprocess.run(  # nosec B603
                 command,
                 cwd=cwd,
                 capture_output=True,
